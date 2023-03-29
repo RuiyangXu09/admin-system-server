@@ -15,7 +15,26 @@ app.use(cors())
  */
 const expressJwt = require('express-jwt');
 const { jwtSecretKey } = require('./config/jwtSecretKey');
+//传入需要token的接口名称
 app.use(expressJwt({ secret:jwtSecretKey, algorithms: ['HS256']}).unless({path:['/api/v1/admin/register', '/api/v1/admin/login', '/api/v1/admin/upload', '/api/v1/admin/display'] }))
+
+/**
+ * 创建multer对象，设置上传路径
+ */
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) =>{
+        //设置保存路径
+        cb(null, './image')
+    },
+    filename: (req, file, cb) =>{
+        //获取文件后缀名
+        const extName = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + Date.now() + extName);
+    }
+})
 
 //router的配置一定要在解析和跨域之后
 /**
@@ -46,7 +65,7 @@ app.use((err, req, res, next) =>{
     res.send({code: 1, message:err.message});
 });
 //以上配置需要在调用路由之前
-//启动服务器 port 3000
+//启动并监听服务器 port 3000
 app.listen(3000,() =>{
     console.log('server will start at: http://127.0.0.1:3000');
 });

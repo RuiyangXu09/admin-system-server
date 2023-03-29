@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const { jwtSecretKey } = require('../config/jwtSecretKey');
 //member info register
 exports.registerControllers = (req, res) =>{
-    //定义member info的参数
+    //定义和响应前端请求的member info的参数
     let {firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation} = req.body;
     
     //member name, phone number, username, password 判断是否为空的校验
@@ -29,10 +29,7 @@ exports.registerControllers = (req, res) =>{
 
         //member info insert into database
     const memberInsertSql = 'INSERT INTO member (firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    db.query(
-        memberInsertSql,
-        [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation],
-        (err, results) =>{
+    db.query(memberInsertSql, [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation], (err, results) =>{
             if (err) {
                 return res.send({code: 1, message: err.message});
             };
@@ -92,7 +89,17 @@ exports.adminInfoControllers = (req, res) =>{
 
 //admin page: upload photo api
 exports.uploadImages = (req, res) =>{
-    res.send('upload success')
+    //file 或 files 对象包含对象表单上传的文件信息
+    const {image} = req.file;
+    console.log(req.file);
+    
+    const uploadImageSql = 'INSERT INTO photo(image) VALUES ?';
+    db.query(uploadImageSql, image, (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        res.send({code: 0, message: 'Upload Success'})
+    })
 };
 
 //admin page: display photo api
