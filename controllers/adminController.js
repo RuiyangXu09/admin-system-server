@@ -93,4 +93,9 @@ exports.adminInfoControllers = (req, res) =>{
 //admin page: upload photo api
 exports.uploadImages = (req, res) =>{
     res.send('upload success')
-}
+};
+
+//admin page: display photo api
+exports.displayImage = (req, res) =>{
+    res.send('display success')
+};

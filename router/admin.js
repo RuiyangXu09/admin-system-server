@@ -14,5 +14,7 @@ router.post('/login',expressJoi(adminCheck),adminController.loginControllers);
 router.get('/adminInfo',adminController.adminInfoControllers);
 //admin page: admin upload images to photo gallery
 router.post('/upload', adminController.uploadImages);
+//admin page: admin display
+router.get('/display', adminController.displayImage);
 
 module.exports  = router;
