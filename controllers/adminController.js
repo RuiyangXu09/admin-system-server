@@ -89,3 +89,8 @@ exports.adminInfoControllers = (req, res) =>{
     const adminInfo = jwt.verify(token.split('Bearer ')[1], jwtSecretKey);
     res.send({code: 0, data: {admin: adminInfo.admin}});
 };
+
+//admin page: upload photo api
+exports.uploadImages = (req, res) =>{
+    res.send('upload success')
+}

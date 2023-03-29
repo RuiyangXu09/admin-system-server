@@ -15,7 +15,7 @@ app.use(cors())
  */
 const expressJwt = require('express-jwt');
 const { jwtSecretKey } = require('./config/jwtSecretKey');
-app.use(expressJwt({ secret:jwtSecretKey, algorithms: ['HS256']}).unless({path:['/api/v1/admin/register', '/api/v1/admin/login'] }))
+app.use(expressJwt({ secret:jwtSecretKey, algorithms: ['HS256']}).unless({path:['/api/v1/admin/register', '/api/v1/admin/login', '/api/v1/admin/upload'] }))
 
 //router的配置一定要在解析和跨域之后
 /**

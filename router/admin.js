@@ -12,4 +12,7 @@ router.post('/register',expressJoi(memberCheck),adminController.registerControll
 router.post('/login',expressJoi(adminCheck),adminController.loginControllers);
 //admin page: admin search api
 router.get('/adminInfo',adminController.adminInfoControllers);
+//admin page: admin upload images to photo gallery
+router.post('/upload', adminController.uploadImages);
+
 module.exports  = router;
