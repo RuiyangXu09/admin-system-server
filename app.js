@@ -18,24 +18,6 @@ const { jwtSecretKey } = require('./config/jwtSecretKey');
 //传入需要token的接口名称
 app.use(expressJwt({ secret:jwtSecretKey, algorithms: ['HS256']}).unless({path:['/api/v1/admin/register', '/api/v1/admin/login', '/api/v1/admin/upload', '/api/v1/admin/display'] }))
 
-/**
- * 创建multer对象，设置上传路径
- */
-const multer = require('multer');
-const path = require('path');
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) =>{
-        //设置保存路径
-        cb(null, './image')
-    },
-    filename: (req, file, cb) =>{
-        //获取文件后缀名
-        const extName = path.extname(file.originalname);
-        cb(null, file.fieldname + '-' + Date.now() + extName);
-    }
-})
-
 //router的配置一定要在解析和跨域之后
 /**
  * Admin page api

@@ -4,6 +4,7 @@
 //连接远程服务器
 const db = require('../config/database');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const { jwtSecretKey } = require('../config/jwtSecretKey');
 //member info register
 exports.registerControllers = (req, res) =>{
@@ -87,22 +88,24 @@ exports.adminInfoControllers = (req, res) =>{
     res.send({code: 0, data: {admin: adminInfo.admin}});
 };
 
-//admin page: upload photo api
-exports.uploadImages = (req, res) =>{
-    //file 或 files 对象包含对象表单上传的文件信息
-    const {image} = req.file;
-    console.log(req.file);
-    
-    const uploadImageSql = 'INSERT INTO photo(image) VALUES ?';
-    db.query(uploadImageSql, image, (err, results) =>{
+//admin page: upload single photo api
+exports.uploadImagesControllers = (req, res) =>{
+    //读取上传文件路径
+    const path = req.file.path;
+    //sql语句 插入路径和文件名
+    const uploadSql = 'INSERT INTO photo(file, path) VALUES (?, ?)';
+    //使用 fs.readFileSync() 方法将文件读入内存中，并将其作为二进制数据传递给 SQL 语句
+    const values = [req.file.originalname, fs.readFileSync(path)];
+    //因为 MySQL 数据库无法直接存储图片文件，所以我们需要将其转换为二进制数据，然后将其保存为 BLOB 类型的数据
+    db.query(uploadSql, values, (err, results) =>{
         if (err) {
             return res.send({code: 1, message: err.message});
         }
-        res.send({code: 0, message: 'Upload Success'})
+        res.send({code: 0, message:'Upload Success!'});
     })
 };
 
 //admin page: display photo api
-exports.displayImage = (req, res) =>{
+exports.displayImageControllers = (req, res) =>{
     res.send('display success')
 };

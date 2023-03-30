@@ -8,7 +8,7 @@ const firstName = joi.string().alphanum();
 //定义first name只能是字母字符串或数字字符串
 const lastName = joi.string().alphanum();
 //定义只能是数字
-const phoneNumber = joi.string().alphanum();
+const phoneNumber = joi.string();
 //定义只能是字母字符串或数字字符
 const username = joi.string().alphanum();
 //定义只能是字母字符串或数字字符
