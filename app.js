@@ -7,8 +7,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extend: false }))
 
 //跨域请求配置
-const cors = require('cors')
-app.use(cors())
+const cors = require('cors');
+app.use(cors());
 
 /**
  * 解析token校验是否正确，哪些接口需要token校验

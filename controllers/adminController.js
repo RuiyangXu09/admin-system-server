@@ -92,10 +92,14 @@ exports.adminInfoControllers = (req, res) =>{
 exports.uploadImagesControllers = (req, res) =>{
     //读取上传文件路径
     const path = req.file.path;
-    //sql语句 插入路径和文件名
-    const uploadSql = 'INSERT INTO photo(file, path) VALUES (?, ?)';
     //使用 fs.readFileSync() 方法将文件读入内存中，并将其作为二进制数据传递给 SQL 语句
-    const values = [req.file.originalname, fs.readFileSync(path)];
+    const url = fs.readFileSync(path);
+    //读取上传文件名
+    const file = req.file.originalname;
+    //sql语句 插入文件名和路径
+    const uploadSql = 'INSERT INTO photo(file, path) VALUES (?, ?)';
+    
+    const values = [file, url];
     //因为 MySQL 数据库无法直接存储图片文件，所以我们需要将其转换为二进制数据，然后将其保存为 BLOB 类型的数据
     db.query(uploadSql, values, (err, results) =>{
         if (err) {
