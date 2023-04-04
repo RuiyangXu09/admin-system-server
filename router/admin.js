@@ -26,7 +26,10 @@ router.post('/login',expressJoi(adminCheck),adminController.loginControllers);
 router.get('/adminInfo',adminController.adminInfoControllers);
 //admin page: admin upload single image
 router.post('/upload', upload.single('image'), adminController.uploadImagesControllers);
-
+//admin page: admin display
+router.get('/display', adminController.displayImageControllers);
+//admin page: photo delete
+router.get('/delete', adminController.deleteImageByIDControllers);
 
 //app.use(express.json());
 // const fs = require('fs')
@@ -61,11 +64,5 @@ router.post('/upload', upload.single('image'), adminController.uploadImagesContr
 //         }
 //     })
 // });
-
-
-
-
-//admin page: admin display
-router.get('/display', adminController.displayImageControllers);
 
 module.exports  = router;

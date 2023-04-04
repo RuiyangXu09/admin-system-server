@@ -113,3 +113,16 @@ exports.uploadImagesControllers = (req, res) =>{
 exports.displayImageControllers = (req, res) =>{
     res.send('display success')
 };
+
+//admin page: delete photo api
+exports.deleteImageByIDControllers = (req, res) =>{
+    let {id} = req.query;
+    let sql = 'DELETE FROM photo WHERE id=?';
+
+    db.query(sql, id, (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        res.send({code: 0, message:'Delete Photo Success!'});
+    });
+};

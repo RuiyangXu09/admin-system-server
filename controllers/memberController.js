@@ -100,3 +100,37 @@ exports.deleteMemberInfoByID = (req, res) =>{
         res.send({code: 0, message:'Delete Member Information Success!'});
     });
 };
+
+//查询admin info
+exports.listAdminInfo = (req, res) =>{
+        //获取前端参数id, 根据id值顺序传递数据到前端
+        let {id} = req.query;
+
+        //查询admin列表的sql,传入id值，按照id顺序排列
+        const adminSearchSql = 'SELECT * FROM admin';
+        //查询admin总数的sql
+        // const totalSql = 'SELECT COUNT(*) AS TOTAL FROM member';
+    
+        //第一次调用admin query，查询总列表
+        db.query(adminSearchSql, [id], (err, resList) =>{
+            if (err) {
+                return res.send({code: 1, message: err.message});
+            }
+            //返回给前端数据
+            res.send({code: 0, data:{list: resList}})
+            // res.send({code: 0, data:{list: resList, total: resTotal[0].TOTAL}})
+    
+            //第二次调用admin query，查询列表的总数量
+            // db.query(totalSql, (err, resTotal) =>{
+            //     if (err) {
+            //         return res.send({code: 1, message: err.message});
+            //     }
+            // })
+        }
+        )
+};
+
+//修改admin info
+exports.editAdminInfo = (req, res) =>{
+    res.send('修改admin成功')
+};
