@@ -84,7 +84,7 @@ exports.updateMemberInfoByID = (req, res) =>{
         if (err) {
             return res.send({code: 1, message: err.message});
         }
-        res.send({code: 0, message: 'Update Success!'})
+        res.send({code: 0, message: 'Update Success!'});
     })
 };
 
@@ -132,5 +132,26 @@ exports.listAdminInfo = (req, res) =>{
 
 //修改admin info
 exports.editAdminInfo = (req, res) =>{
-    res.send('修改admin成功')
+    let {id, admin, password} = req.query;
+    let sql = 'UPDATE admin SET ';
+    let arr = []; 
+
+    //同时修改admin和password
+    if (admin && password) {
+        sql = sql + 'admin=?, password=? WHERE id=?'
+        arr = [admin, password, Number(id)]
+    }else if (admin) {
+        sql = sql + 'admin=? WHERE id=?';
+        arr = [admin, Number(id)];
+    }else if (password) {
+        sql = sql + 'password WHERE id=?';
+        arr = [password, Number(id)];
+    }
+
+    db.query(sql, arr, (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        res.send({code: 0, message: 'Update Success!'});
+    })
 };
