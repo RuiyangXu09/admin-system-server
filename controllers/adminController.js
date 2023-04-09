@@ -4,8 +4,16 @@
 //连接远程服务器
 const db = require('../config/database');
 const jwt = require('jsonwebtoken');
+const OSS = require('ali-oss');
 const fs = require('fs');
 const { jwtSecretKey } = require('../config/jwtSecretKey');
+//创建阿里云OSS对象
+const ossClient = new OSS({
+    region: 'oss-ap-southeast-1',
+    accessKeyId: 'LTAI5tR2CSMZbgyNBhrgcKn5',
+    accessKeySecret: 'iTa4d64JFXJBt5A4eGJ6OldmTeQQrl',
+    bucket: 'akarana',
+})
 //member info register
 exports.registerControllers = (req, res) =>{
     //定义和响应前端请求的member info的参数
@@ -89,35 +97,47 @@ exports.adminInfoControllers = (req, res) =>{
 };
 
 //admin page: upload single photo api
-exports.uploadImagesControllers = (req, res) =>{
-    //读取上传文件路径
-    const path = req.file.path;
-    //使用 fs.readFileSync() 方法将文件读入内存中，并将其作为二进制数据传递给 SQL 语句
-    const url = fs.readFileSync(path);
-    //读取上传文件名
-    const file = req.file.originalname;
-    //sql语句 插入文件名和路径
-    const uploadSql = 'INSERT INTO photo(file, path) VALUES (?, ?)';
-    
-    const values = [file, url];
-    //因为 MySQL 数据库无法直接存储图片文件，所以我们需要将其转换为二进制数据，然后将其保存为 BLOB 类型的数据
-    db.query(uploadSql, values, (err, results) =>{
-        if (err) {
-            return res.send({code: 1, message: err.message});
-        }
-        res.send({code: 0, message:'Upload Success!'});
-    })
+exports.uploadImagesControllers = async (req, res) =>{
+    //读取图片路径，转换为二进制流
+    const fileContent = fs.readFileSync(req.file.path);
+    try {
+        //调用阿里云OSS对象，本地图片上传到阿里云OSS存储，并获取它的url
+        const ossResult = await ossClient.put(req.file.originalname, fileContent)
+        const imageUrl = ossResult.url;
+
+        //sql语句，将HTTPS格式的图片URL存储到mysql数据库中
+        const uploadSql = 'INSERT INTO image (url) VALUES (?)';
+        db.query(uploadSql, imageUrl, (err, results) =>{
+            if (err) {
+                return res.send({code: 1, message: err.message});
+            }
+            res.send({code: 0, message:'Upload Success!'});
+        })
+    } catch (err) {
+        console.error(err);
+        return res.send({code: 1, message: 'Failed to upload'});
+    }
 };
 
 //admin page: display photo api
 exports.displayImageControllers = (req, res) =>{
-    res.send('display success')
+    let id = req.query;
+    //sql语句 选出 id和对应图片的二进制流path
+    const displayImageSql = 'SELECT id, url FROM image';
+
+    //执行sql语句，传入id值
+    db.query(displayImageSql, [id], (err, SqlResults) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        res.send({code: 0, data:{list: SqlResults}})
+    })
 };
 
 //admin page: delete photo api
 exports.deleteImageByIDControllers = (req, res) =>{
     let {id} = req.query;
-    let sql = 'DELETE FROM photo WHERE id=?';
+    let sql = 'DELETE FROM image WHERE id=?';
 
     db.query(sql, id, (err, results) =>{
         if (err) {
