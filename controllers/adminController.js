@@ -123,7 +123,7 @@ exports.uploadImagesControllers = async (req, res) =>{
 exports.displayImageControllers = (req, res) =>{
     let id = req.query;
     //sql语句 选出 id和对应图片的二进制流path
-    const displayImageSql = 'SELECT id, url FROM image';
+    const displayImageSql = 'SELECT id, url FROM image ORDER BY id';
 
     //执行sql语句，传入id值
     db.query(displayImageSql, [id], (err, SqlResults) =>{
@@ -146,3 +146,8 @@ exports.deleteImageByIDControllers = (req, res) =>{
         res.send({code: 0, message:'Delete Photo Success!'});
     });
 };
+
+//admin page: create rally
+exports.createRallyControllers = (req, res) =>{
+    res.send('Create rally success')
+}

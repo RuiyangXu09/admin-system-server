@@ -13,4 +13,10 @@ router.get('/delete',expressJoi(deleteMemberInfoCheck),memberController.deleteMe
 router.get('/search', memberController.listAdminInfo);
 //Admin info 修改api
 router.get('/edit', memberController.editAdminInfo);
+// Rally 查询rally
+router.get('/listRally', memberController.listRally);
+// Rally 修改rally
+router.get('/updateRally',memberController.updateRallyInfoByID);
+// Rally 删除rally
+router.get('/deleteRally',memberController.deleteRallyInfoByID);
 module.exports  = router;

@@ -10,7 +10,7 @@ exports.listInfo = (req, res) =>{
 
     //查询member列表的sql,传入id值，按照id顺序排列
     // const memberSearchSql = 'SELECT * FROM member WHERE id=? ORDER BY id';
-    const memberSearchSql = 'SELECT * FROM member';
+    const memberSearchSql = 'SELECT * FROM member ORDER BY id';
     //查询member总数的sql
     const totalSql = 'SELECT COUNT(*) AS TOTAL FROM member';
 
@@ -155,3 +155,17 @@ exports.editAdminInfo = (req, res) =>{
         res.send({code: 0, message: 'Update Success!'});
     })
 };
+
+//查询rally info
+exports.listRally = (req, res) =>{
+    res.send('List Rally info success')
+}
+//修改rally info
+exports.updateRallyInfoByID = (req, res) =>{
+    res.send('Update rally success')
+}
+
+//删除rally info
+exports.deleteRallyInfoByID = (req, res) =>{
+    res.send('Delete rally success')
+}

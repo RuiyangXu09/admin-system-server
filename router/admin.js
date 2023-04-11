@@ -30,7 +30,8 @@ router.post('/upload', upload.single('image'), adminController.uploadImagesContr
 router.get('/display', adminController.displayImageControllers);
 //admin page: photo delete
 router.get('/delete', adminController.deleteImageByIDControllers);
-
+//create rally
+router.post('/create', adminController.createRallyControllers)
 //app.use(express.json());
 // const fs = require('fs')
 // router.post('/upload', upload.single('file'), (req,res)=>{
