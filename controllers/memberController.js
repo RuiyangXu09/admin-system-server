@@ -108,24 +108,14 @@ exports.listAdminInfo = (req, res) =>{
 
         //查询admin列表的sql,传入id值，按照id顺序排列
         const adminSearchSql = 'SELECT * FROM admin';
-        //查询admin总数的sql
-        // const totalSql = 'SELECT COUNT(*) AS TOTAL FROM member';
-    
-        //第一次调用admin query，查询总列表
+
+        //调用admin query，查询总列表
         db.query(adminSearchSql, [id], (err, resList) =>{
             if (err) {
                 return res.send({code: 1, message: err.message});
             }
             //返回给前端数据
             res.send({code: 0, data:{list: resList}})
-            // res.send({code: 0, data:{list: resList, total: resTotal[0].TOTAL}})
-    
-            //第二次调用admin query，查询列表的总数量
-            // db.query(totalSql, (err, resTotal) =>{
-            //     if (err) {
-            //         return res.send({code: 1, message: err.message});
-            //     }
-            // })
         }
         )
 };
@@ -158,14 +148,49 @@ exports.editAdminInfo = (req, res) =>{
 
 //查询rally info
 exports.listRally = (req, res) =>{
-    res.send('List Rally info success')
+    //获取前端参数id, 根据id值顺序传递数据到前端
+    let {id} = req.query;
+
+    //sql语句查询所有rally
+    const rallySelectSql = 'SELECT * FROM rally WHERE status = "open"';
+    db.query(rallySelectSql, [id], (err, resRally) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message})
+        }
+        //返回查询结果
+        res.send({code: 0, data:{list: resRally}});
+    })
 }
 //修改rally info
 exports.updateRallyInfoByID = (req, res) =>{
-    res.send('Update rally success')
+    res.send('Update rally success');
 }
 
 //删除rally info
 exports.deleteRallyInfoByID = (req, res) =>{
-    res.send('Delete rally success')
+    let {id} = req.query;
+    let sql = 'DELETE FROM rally WHERE id=?';
+
+    db.query(sql, id, (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        res.send({code: 0, message:'Delete rally success!'});
+    });
+}
+
+exports.setupRallyStatusByID =(req, res) =>{
+    //获取参数id和status, 根据id值重新设置数据
+    let {id, status} = req.query;
+
+    //sql语句，将rally表中每个对应id值的status列名的open设置为close
+    const setupStatusSql = 'UPDATE rally SET status = "close" WHERE id =?';
+    //执行语句，传入sql语句和参数
+    db.query(setupStatusSql, [id, status], (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message})
+        }
+        //返回查询结果
+        res.send({code: 0, message: 'Rally closed!'});
+    })
 }

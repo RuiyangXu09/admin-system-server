@@ -32,38 +32,5 @@ router.get('/display', adminController.displayImageControllers);
 router.get('/delete', adminController.deleteImageByIDControllers);
 //create rally
 router.post('/create', adminController.createRallyControllers)
-//app.use(express.json());
-// const fs = require('fs')
-// router.post('/upload', upload.single('file'), (req,res)=>{
-//     let data = {
-//         code:'0',
-//         mes:'请求失败'
-//     }
-//     console.log('上传传入的图片参数----',req.file.path) //拿到传入的图片路径
-//     fs.readFile(req.file.path,(err,datas)=>{    //读取
-//         if(err){    //失败
-//             res.json(data)
-//         }else{  //写入文件
-//             // 拼接文件的名称
-//             let times = Date.now() + parseInt(Math.random() * 999) + parseInt(Math.random() * 1999)  //根据时间来实现不同名称
-//             let extname = req.file.mimetype.split('/')[1]   //文件的扩展名
-//             let names = times + '.' + extname
-//             console.log('names--------',names)
-//             fs.writeFile('../image/' + names,datas,(errs)=>{
-//                 if(errs){
-//                     console.log(1)
-//                     data.mes = '上传失败'
-//                     res.json(data)
-//                 }else{
-//                     console.log(2)
-//                     data.code = 1
-//                     data.mes = '上传成功'
-//                     data.data = 'image/' + names 
-//                     res.json(data)
-//                 }
-//             }) 
-//         }
-//     })
-// });
 
 module.exports  = router;

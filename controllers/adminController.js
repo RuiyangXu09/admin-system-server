@@ -37,14 +37,14 @@ exports.registerControllers = (req, res) =>{
         };
 
         //member info insert into database
-    const memberInsertSql = 'INSERT INTO member (firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    db.query(memberInsertSql, [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation], (err, results) =>{
-            if (err) {
-                return res.send({code: 1, message: err.message});
-            };
-            res.send({code: 0, message:'Member Information Register Success!'});
-        }
-    )
+        const memberInsertSql = 'INSERT INTO member (firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(memberInsertSql, [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation], (err, results) =>{
+                if (err) {
+                    return res.send({code: 1, message: err.message});
+                };
+                res.send({code: 0, message:'Member Information Register Success!'});
+            }
+        )
     });
 };
 
@@ -149,5 +149,21 @@ exports.deleteImageByIDControllers = (req, res) =>{
 
 //admin page: create rally
 exports.createRallyControllers = (req, res) =>{
-    res.send('Create rally success')
+    let {mainTitle, subTitle, content, time, address} = req.body
+
+    //当创建一个rally时，使用 DEFAULT 关键字来设置status这个列的默认值
+    const setUpStatusSql = 'ALTER TABLE rally MODIFY status VARCHAR(50) DEFAULT "open"';
+    db.query(setUpStatusSql, (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message:err.message})
+        }
+        //创建rally，传入关键字mainTitle, subTitle, content, time, address
+        const createRallySql = 'INSERT INTO rally (mainTitle, subTitle, content, time, address) VALUE(?, ?, ?, ?, ?)'
+        db.query(createRallySql, [mainTitle, subTitle, content, time, address], (err, results) =>{
+            if (err) {
+                return res.send({code: 1, message: err.message});
+            };
+            res.send({code: 0, message:'Rally Create Success!'});
+        })
+    })
 }
