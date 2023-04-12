@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-//database information
+//setup database information
 const db = mysql.createPool({
     host:'8.219.194.127',
     user:'root',

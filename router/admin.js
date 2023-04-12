@@ -6,10 +6,6 @@ const expressJoi = require('@escook/express-joi');
 //引入member验证和admin验证
 const { memberCheck } = require('../utils/memberCheck');
 const { adminCheck } = require('../utils/adminChecker');
-//引入处理文件上传的模块
-// const upload =require('../config/upload')
-
-
 
 //引入multer，将文件保存到指定的目录中，准备读取该文件
 const multer = require('multer');
