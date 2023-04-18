@@ -167,3 +167,35 @@ exports.createRallyControllers = (req, res) =>{
         })
     })
 }
+
+//同时上传文字和图片的接口
+// exports.createRallyControllers = async(req, res) =>{
+//     let {mainTitle, subTitle, content, time, address} = req.body
+
+//     //读取图片路径，转换为二进制流
+//     const fileContent = fs.readFileSync(req.file.path);
+//     try {
+//         //调用阿里云OSS对象，本地图片上传到阿里云OSS存储，并获取它的url
+//         const ossResult = await ossClient.put(req.file.originalname, fileContent)
+//         const imageUrl = ossResult.url;
+
+//         //当创建一个rally时，使用 DEFAULT 关键字来设置status这个列的默认值
+//         const setUpStatusSql = 'ALTER TABLE rally MODIFY status VARCHAR(50) DEFAULT "open"';
+//         db.query(setUpStatusSql, (err, results) =>{
+//             if (err) {
+//                 return res.send({code: 1, message:err.message})
+//             }
+//             //创建rally，传入关键字mainTitle, subTitle, content, time, address, image
+//             const createRallySql = 'INSERT INTO rally (mainTitle, subTitle, content, time, address, image) VALUE(?, ?, ?, ?, ?, ?)'
+//             db.query(createRallySql, [mainTitle, subTitle, content, time, address, imageUrl], (err, results) =>{
+//                 if (err) {
+//                     return res.send({code: 1, message: err.message});
+//                 };
+//                 res.send({code: 0, message:'Rally Create Success!'});
+//             })
+//         })
+//     } catch (err) {
+//         console.error(err);
+//         return res.send({code: 1, message: 'Failed to upload'});
+//     }
+// }

@@ -138,6 +138,7 @@ exports.editAdminInfo = (req, res) =>{
         arr = [password, Number(id)];
     }
 
+    //执行sql语句
     db.query(sql, arr, (err, results) =>{
         if (err) {
             return res.send({code: 1, message: err.message});
@@ -152,7 +153,7 @@ exports.listRally = (req, res) =>{
     let {id} = req.query;
 
     //sql语句查询所有rally
-    const rallySelectSql = 'SELECT * FROM rally WHERE status = "open"';
+    const rallySelectSql = 'SELECT * FROM rally';
     db.query(rallySelectSql, [id], (err, resRally) =>{
         if (err) {
             return res.send({code: 1, message: err.message})
@@ -163,7 +164,38 @@ exports.listRally = (req, res) =>{
 }
 //修改rally info
 exports.updateRallyInfoByID = (req, res) =>{
-    res.send('Update rally success');
+    //定义rally中需要修改的参数
+    let {id, mainTitle, subTitle, content, time, address} = req.query;
+    let sql = 'UPDATE rally SET ';
+    let arr = [];
+
+    if (mainTitle && subTitle && content && time && address) {
+        sql = sql + 'mainTitle=?, subTitle=?, content=?, time=?, address=? WHERE id=?';
+        arr = [mainTitle, subTitle, content, time, address, Number(id)];
+    } else if (mainTitle) {
+        sql = sql + 'mainTitle=? WHERE id=?';
+        arr = [mainTitle, Number(id)];
+    } else if (subTitle) {
+        sql = sql + 'subTitle=? WHERE id=?';
+        arr = [subTitle, Number(id)];
+    } else if (content) {
+        sql = sql + 'content=? WHERE id=?';
+        arr = [content, Number(id)];
+    } else if (time) {
+        sql = sql + 'time=? WHERE id=?';
+        arr = [time, Number(id)];
+    } else if (address) {
+        sql = sql + 'address=? WHERE id=?';
+        arr = [address, Number(id)];
+    }
+
+    //执行sql语句
+    db.query(sql, arr, (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        res.send({code: 0, message: 'Update Success!'});
+    })
 }
 
 //删除rally info
@@ -179,6 +211,7 @@ exports.deleteRallyInfoByID = (req, res) =>{
     });
 }
 
+//设置rally status 为close
 exports.setupRallyStatusByID =(req, res) =>{
     //获取参数id和status, 根据id值重新设置数据
     let {id, status} = req.query;

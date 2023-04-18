@@ -28,5 +28,7 @@ router.get('/display', adminController.displayImageControllers);
 router.get('/delete', adminController.deleteImageByIDControllers);
 //create rally
 router.post('/create', adminController.createRallyControllers)
+//create rally v2
+// router.post('/create', upload.single('image'), adminController.createRallyControllers)
 
 module.exports  = router;
