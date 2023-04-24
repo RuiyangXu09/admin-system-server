@@ -171,7 +171,7 @@ exports.deleteImageByIDControllers = (req, res) =>{
 
 //同时上传文字和图片的接口
 exports.createRallyControllers = async(req, res) =>{
-    let {mainTitle, subTitle, content, time, address} = req.body
+    let {mainTitle, subTitle, content, time, address, mapUrl} = req.body
 
     //读取图片路径，转换为二进制流
     const fileContent = fs.readFileSync(req.file.path);
@@ -187,8 +187,8 @@ exports.createRallyControllers = async(req, res) =>{
                 return res.send({code: 1, message:err.message})
             }
             //创建rally，传入关键字mainTitle, subTitle, content, time, address, image
-            const createRallySql = 'INSERT INTO rally (mainTitle, subTitle, content, time, address, image) VALUE(?, ?, ?, ?, ?, ?)'
-            db.query(createRallySql, [mainTitle, subTitle, content, time, address, imageUrl], (err, results) =>{
+            const createRallySql = 'INSERT INTO rally (mainTitle, subTitle, content, time, address, image, mapUrl) VALUE(?, ?, ?, ?, ?, ?, ?)'
+            db.query(createRallySql, [mainTitle, subTitle, content, time, address, imageUrl, mapUrl], (err, results) =>{
                 if (err) {
                     return res.send({code: 1, message: err.message});
                 };
