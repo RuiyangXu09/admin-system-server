@@ -19,7 +19,8 @@ router.get('/listRally', memberController.listRally);
 router.get('/updateRally',memberController.updateRallyInfoByID);
 // Rally 删除rally
 router.get('/deleteRally',memberController.deleteRallyInfoByID);
-//Rally 设置status
-router.get('/setup', memberController.setupRallyStatusByID);
-
+//Rally 设置status close
+router.get('/close', memberController.closeRallyStatusByID);
+//Rally 设置status open
+router.get('/open', memberController.openRallyStatusByID);
 module.exports  = router;

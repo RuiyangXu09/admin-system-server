@@ -212,7 +212,7 @@ exports.deleteRallyInfoByID = (req, res) =>{
 }
 
 //设置rally status 为close
-exports.setupRallyStatusByID =(req, res) =>{
+exports.closeRallyStatusByID =(req, res) =>{
     //获取参数id和status, 根据id值重新设置数据
     let {id, status} = req.query;
 
@@ -225,5 +225,22 @@ exports.setupRallyStatusByID =(req, res) =>{
         }
         //返回查询结果
         res.send({code: 0, message: 'Rally closed!'});
+    })
+}
+
+//设置rally status 为close
+exports.openRallyStatusByID =(req, res) =>{
+    //获取参数id和status, 根据id值重新设置数据
+    let {id, status} = req.query;
+
+    //sql语句，将rally表中每个对应id值的status列名的open设置为close
+    const setupStatusSql = 'UPDATE rally SET status = "open" WHERE id =?';
+    //执行语句，传入sql语句和参数
+    db.query(setupStatusSql, [id, status], (err, results) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message})
+        }
+        //返回查询结果
+        res.send({code: 0, message: 'Rally opened!'});
     })
 }
