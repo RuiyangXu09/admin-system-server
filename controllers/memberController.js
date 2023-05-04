@@ -244,3 +244,27 @@ exports.openRallyStatusByID =(req, res) =>{
         res.send({code: 0, message: 'Rally opened!'});
     })
 }
+
+//查询member emailFormat
+exports.listMemberFormat = (req, res) =>{
+    //查询member列表的sql
+    const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member';
+
+    //条件语句 WHERE memberType = \'R\'
+    //const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member WHERE memberType = \'R\'';
+
+    //调用member query，查询总列表
+    db.query(searchMemberEmailFormatSql, (err, resList) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+        //Access the results from the first row of the resList
+        const temp = resList[0].results;
+
+        //Replace any \r\n with empty string
+        const results = temp.replace(/\r\n/g, '');
+
+        //print results
+        res.send({code: 0, data:{list: results}})
+    })
+}

@@ -21,5 +21,7 @@ router.get('/deleteRally',memberController.deleteRallyInfoByID);
 router.get('/close', memberController.closeRallyStatusByID);
 //Rally 设置status open
 router.get('/open', memberController.openRallyStatusByID);
+//member 查询对应membership的Email Formate 
+router.get('/listFormate', memberController.listMemberFormat);
 
 module.exports  = router;
