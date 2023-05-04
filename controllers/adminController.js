@@ -17,7 +17,7 @@ const ossClient = new OSS({
 //member info register
 exports.registerControllers = (req, res) =>{
     //定义和响应前端请求的member info的参数
-    let {firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation} = req.body;
+    let {firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, activity, emailFormate} = req.body;
     
     //member name, phone number, username, password 判断是否为空的校验
     if (!firstName || !lastName || !phoneNumber || !username || !password) {
@@ -37,8 +37,8 @@ exports.registerControllers = (req, res) =>{
         };
 
         //member info insert into database
-        const memberInsertSql = 'INSERT INTO member (firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        db.query(memberInsertSql, [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation], (err, results) =>{
+        const memberInsertSql = 'INSERT INTO member (firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, activity, emailFormate) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(memberInsertSql, [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, activity, emailFormate], (err, results) =>{
                 if (err) {
                     return res.send({code: 1, message: err.message});
                 };
