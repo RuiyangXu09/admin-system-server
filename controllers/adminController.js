@@ -33,7 +33,7 @@ exports.registerControllers = (req, res) =>{
 
         //如果打印的数组值为0，空值，则return一个error message
         if (results.length > 0) {
-            return res.send({code: 1, message:' The member user name has already exists.'});
+            return res.send({code: 1, message:'The member user name has already exists.'});
         };
 
         //member info insert into database
