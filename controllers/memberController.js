@@ -248,23 +248,19 @@ exports.openRallyStatusByID =(req, res) =>{
 //查询member emailFormat
 exports.listMemberFormat = (req, res) =>{
     //定义需要传入的变量值
-    let {memberType, active} = req.body;
+    let {memberType, active, id} = req.query;
     //查询member列表的sql
     const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member WHERE memberType =? AND active =?';
+    // const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member';
 
     //条件语句 WHERE memberType = \'R\'
     //const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member WHERE memberType = \'R\'';
 
     //调用member query，查询总列表
-    db.query(searchMemberEmailFormatSql, [memberType, active], (err, resList) =>{
+    db.query(searchMemberEmailFormatSql, [memberType, active, id], (err, resList) =>{
         if (err) {
             return res.send({code: 1, message: err.message});
         }
-        // //Access the results from the first row of the resList
-        // const temp = resList[0].results;
-
-        // //Replace any \r\n with empty string
-        // const results = temp.replace(/\r\n/g, '');
 
         //print results
         res.send({code: 0, data:{list: resList}})
