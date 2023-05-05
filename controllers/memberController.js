@@ -35,13 +35,13 @@ exports.listInfo = (req, res) =>{
 //修改member info
 exports.updateMemberInfoByID = (req, res) =>{
     //定义参数 列表中存在的列名
-    let {firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, id} = req.query;
+    let {firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, active, emailFormate, id} = req.query;
     let sql = 'UPDATE member SET ';
     let arr = [];
     //同时修改所有info
-    if (firstName && lastName && phoneNumber && username && password && address && emailAddress && birthday && occupation) {
-        sql = sql + 'firstName=?, lastName=?, phoneNumber=?, username=?, password=?, address=?, emailAddress=?, birthday=?, occupation=? WHERE id=?';
-        arr = [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, Number(id)];
+    if (firstName && lastName && phoneNumber && username && password && address && emailAddress && birthday && occupation && memberType && couples && dateJoined && notes && active && emailFormate) {
+        sql = sql + 'firstName=?, lastName=?, phoneNumber=?, username=?, password=?, address=?, emailAddress=?, birthday=?, occupation=?, memberType=?, couples=?, dateJoined=?, notes=?, active=?, emailFormate=? WHERE id=?';
+        arr = [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, active, emailFormate, Number(id)];
     }else if (firstName) {
         //单独修改first name
         sql = sql + 'firstName=? WHERE id=?';
@@ -78,7 +78,32 @@ exports.updateMemberInfoByID = (req, res) =>{
         //单独修改occupation
         sql = sql + 'occupation=? WHERE id=?';
         arr = [occupation, Number(id)];
+    }else if (memberType) {
+        //单独修改occupation
+        sql = sql + 'memberType=? WHERE id=?';
+        arr = [memberType, Number(id)];
+    }else if (couples) {
+        //单独修改occupation
+        sql = sql + 'couples=? WHERE id=?';
+        arr = [couples, Number(id)];
+    }else if (dateJoined) {
+        //单独修改occupation
+        sql = sql + 'dateJoined=? WHERE id=?';
+        arr = [dateJoined, Number(id)];
+    }else if (notes) {
+        //单独修改occupation
+        sql = sql + 'notes=? WHERE id=?';
+        arr = [notes, Number(id)];
+    }else if (active) {
+        //单独修改occupation
+        sql = sql + 'active=? WHERE id=?';
+        arr = [active, Number(id)];
+    }else if (emailFormate) {
+        //单独修改occupation
+        sql = sql + 'emailFormate=? WHERE id=?';
+        arr = [emailFormate, Number(id)];
     }
+    console.log();
     //传入update的方法
     db.query(sql, arr, (err, results) =>{
         if (err) {
