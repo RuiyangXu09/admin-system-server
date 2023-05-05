@@ -79,27 +79,27 @@ exports.updateMemberInfoByID = (req, res) =>{
         sql = sql + 'occupation=? WHERE id=?';
         arr = [occupation, Number(id)];
     }else if (memberType) {
-        //单独修改occupation
+        //单独修改memberType
         sql = sql + 'memberType=? WHERE id=?';
         arr = [memberType, Number(id)];
     }else if (couples) {
-        //单独修改occupation
+        //单独修改couples
         sql = sql + 'couples=? WHERE id=?';
         arr = [couples, Number(id)];
     }else if (dateJoined) {
-        //单独修改occupation
+        //单独修改dateJoined
         sql = sql + 'dateJoined=? WHERE id=?';
         arr = [dateJoined, Number(id)];
     }else if (notes) {
-        //单独修改occupation
+        //单独修改notes
         sql = sql + 'notes=? WHERE id=?';
         arr = [notes, Number(id)];
     }else if (active) {
-        //单独修改occupation
+        //单独修改active
         sql = sql + 'active=? WHERE id=?';
         arr = [active, Number(id)];
     }else if (emailFormate) {
-        //单独修改occupation
+        //单独修改emailFormate
         sql = sql + 'emailFormate=? WHERE id=?';
         arr = [emailFormate, Number(id)];
     }
