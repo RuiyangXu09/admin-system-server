@@ -3,17 +3,11 @@
  */
 //连接远程服务器
 const db = require('../config/database');
+const ossClient = require('../config/ali-oss');
 const jwt = require('jsonwebtoken');
-const OSS = require('ali-oss');
 const fs = require('fs');
 const { jwtSecretKey } = require('../config/jwtSecretKey');
-//创建阿里云OSS对象
-const ossClient = new OSS({
-    region: 'oss-ap-southeast-1',
-    accessKeyId: 'LTAI5tR2CSMZbgyNBhrgcKn5',
-    accessKeySecret: 'iTa4d64JFXJBt5A4eGJ6OldmTeQQrl',
-    bucket: 'akarana',
-})
+
 //member info register
 exports.registerControllers = (req, res) =>{
     //定义和响应前端请求的member info的参数
@@ -172,6 +166,32 @@ exports.createRallyControllers = async(req, res) =>{
                 };
                 res.send({code: 0, message:'Rally Create Success!'});
             })
+        })
+    } catch (err) {
+        console.error(err);
+        return res.send({code: 1, message: 'Failed to upload'});
+    }
+}
+
+exports.uploadBulletinByIDControllers = async(req, res) =>{
+    //传入前端的id值
+    let {id} = req.body;
+    const fileContent = fs.readFileSync(req.file.path);
+
+    try {
+        //调用阿里云OSS对象，本地图片上传到阿里云OSS存储，并获取它的url
+        const ossResult = await ossClient.put(req.file.originalname, fileContent)
+        //url赋值给fileUrl对象
+        const fileUrl = ossResult.url;
+
+        //sql语句，将HTTPS格式的file URL存储到mysql数据库中
+        const uploadSql = 'UPDATE rally SET bulletin=? WHERE id=?';
+        db.query(uploadSql, [fileUrl, id], (err, results) =>{
+            if (err) {
+                return res.send({code: 1, message: err.message});
+            }
+
+            res.send({code: 0, message:'Upload Bulletin Success!'});
         })
     } catch (err) {
         console.error(err);

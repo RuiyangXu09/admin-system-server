@@ -16,7 +16,7 @@ app.use(cors());
 const expressJwt = require('express-jwt');
 const { jwtSecretKey } = require('./config/jwtSecretKey');
 //传入需要token的接口名称
-app.use(expressJwt({ secret:jwtSecretKey, algorithms: ['HS256']}).unless({path:['/api/v1/admin/register', '/api/v1/admin/login', '/api/v1/admin/upload', '/api/v1/admin/display', '/api/v1/admin/create', '/api/v1/admin/uploadCoverImage'] }))
+app.use(expressJwt({ secret:jwtSecretKey, algorithms: ['HS256']}).unless({path:['/api/v1/admin/register', '/api/v1/admin/login', '/api/v1/admin/upload', '/api/v1/admin/display', '/api/v1/admin/create', '/api/v1/admin/uploadBulletin'] }))
 
 //router的配置一定要在解析和跨域之后
 /**
