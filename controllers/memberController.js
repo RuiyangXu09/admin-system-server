@@ -33,84 +33,86 @@ exports.listInfo = (req, res) =>{
 }
 
 //修改member info
-exports.updateMemberInfoByID = (req, res) =>{
-    //定义参数 列表中存在的列名
-    let {firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, active, emailFormate, id} = req.query;
-    let sql = 'UPDATE member SET ';
-    let arr = [];
-    //同时修改所有info
-    if (firstName && lastName && phoneNumber && username && password && address && emailAddress && birthday && occupation && memberType && couples && dateJoined && notes && active && emailFormate) {
-        sql = sql + 'firstName=?, lastName=?, phoneNumber=?, username=?, password=?, address=?, emailAddress=?, birthday=?, occupation=?, memberType=?, couples=?, dateJoined=?, notes=?, active=?, emailFormate=? WHERE id=?';
-        arr = [firstName, lastName, phoneNumber, username, password, address, emailAddress, birthday, occupation, memberType, couples, dateJoined, notes, active, emailFormate, Number(id)];
-    }else if (firstName) {
-        //单独修改first name
-        sql = sql + 'firstName=? WHERE id=?';
-        arr = [firstName, Number(id)];
-    }else if (lastName) {
-        //单独修改last name
-        sql = sql + 'lastName=? WHERE id=?';
-        arr = [lastName, Number(id)];
-    }else if (phoneNumber) {
-        //单独修改phone number
-        sql = sql + 'phoneNumber=? WHERE id=?';
-        arr = [phoneNumber, Number(id)];
-    }else if (username) {
-        //单独修改username
-        sql = sql + 'username=? WHERE id=?';
-        arr = [username, Number(id)];
-    }else if (password) {
-        //单独修改password
-        sql = sql + 'password=? WHERE id=?';
-        arr = [password, Number(id)];
-    }else if (address) {
-        //单独修改address
-        sql = sql + 'address=? WHERE id=?';
-        arr = [address, Number(id)];
-    }else if (emailAddress) {
-        //单独修改email address
-        sql = sql + 'emailAddress=? WHERE id=?';
-        arr = [emailAddress, Number(id)];
-    }else if (birthday) {
-        //单独修改birthday
-        sql = sql + 'birthday=? WHERE id=?';
-        arr = [birthday, Number(id)];
-    }else if (occupation) {
-        //单独修改occupation
-        sql = sql + 'occupation=? WHERE id=?';
-        arr = [occupation, Number(id)];
-    }else if (memberType) {
-        //单独修改memberType
-        sql = sql + 'memberType=? WHERE id=?';
-        arr = [memberType, Number(id)];
-    }else if (couples) {
-        //单独修改couples
-        sql = sql + 'couples=? WHERE id=?';
-        arr = [couples, Number(id)];
-    }else if (dateJoined) {
-        //单独修改dateJoined
-        sql = sql + 'dateJoined=? WHERE id=?';
-        arr = [dateJoined, Number(id)];
-    }else if (notes) {
-        //单独修改notes
-        sql = sql + 'notes=? WHERE id=?';
-        arr = [notes, Number(id)];
-    }else if (active) {
-        //单独修改active
-        sql = sql + 'active=? WHERE id=?';
-        arr = [active, Number(id)];
-    }else if (emailFormate) {
-        //单独修改emailFormate
-        sql = sql + 'emailFormate=? WHERE id=?';
-        arr = [emailFormate, Number(id)];
+exports.updateMemberInfoByID = async (req, res) => {
+    //获取前端需要接收的参数
+    let {firstName, lastName, phoneNumber, 
+        username, password, address, 
+        emailAddress, birthday, occupation, 
+        memberType, couples, dateJoined, 
+        notes, active, emailFormate, id} = req.query;
+
+    //将字段值与其对应的字段名存储在fields中
+    const fields = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        username: username,
+        password: password,
+        address: address,
+        emailAddress: emailAddress,
+        birthday: birthday,
+        occupation: occupation,
+        memberType: memberType,
+        couples: couples,
+        dateJoined: dateJoined,
+        notes: notes,
+        active: active,
+        emailFormate: emailFormate
+    };
+
+    // Check if the username is duplicated
+    if (username) {
+        //定义一个sql查询语句
+        const checkUsernameSql = 'SELECT id FROM member WHERE username=?';
+        //创建并等待一个新的Promise，数据库查询完成时进行解析
+        const checkUsernameResult = await new Promise((resolve, reject) => {
+            //执行sql，并将查询结果传递给回调函数
+            db.query(checkUsernameSql, [username], (err, results) => {
+                //如果在执行查询时发生错误，我们将错误传递给Promise的reject
+                if (err) return reject(err);
+                //查询成功，将结果传给Promise的resolve
+                resolve(results);
+            });
+        });
+
+        //检查结果是否包含与给定username匹配的数据，且该数据的id与当前更新操作的id不同
+        if (checkUsernameResult.length > 0 && checkUsernameResult[0].id != id) {
+            //打印消息，username已经有重复值
+            return res.send({code: 1, message: 'Username is already exists.'});
+        }
     }
-    console.log();
-    //传入update的方法
-    db.query(sql, arr, (err, results) =>{
+
+    //定义一个更新sql语句的初始部分
+    let sql = 'UPDATE member SET ';
+    //创建一个数组用于存储将要更新的字段
+    let updateFields = [];
+    //创建一个数组用于存储将要传递给db.query的参数值
+    let arr = [];
+
+    //遍历fields中的每个字段
+    for (let field in fields) {
+        //检查字段值是否已定义
+        if (fields[field] !== undefined) {
+            //如果已定义字段值，将字段名和占位符 ? 添加到updateFields数组中
+            updateFields.push(`${field}=?`);
+            //添加到arr数组中
+            arr.push(fields[field]);
+        }
+    }
+
+    //将updateFields数组中的字段名和占位符连接成一个字符串，并添加到sql语句的末尾
+    sql += updateFields.join(', ') + ' WHERE id=?';
+    //将成员的id添加到arr数组的末尾
+    arr.push(Number(id));
+
+    //使用db.query函数执行sql更新操作，并传入参数数组arr
+    db.query(sql, arr, (err, results) => {
         if (err) {
             return res.send({code: 1, message: err.message});
         }
+        //打印success信息
         res.send({code: 0, message: 'Update Success!'});
-    })
+    });
 };
 
 //删除member info
