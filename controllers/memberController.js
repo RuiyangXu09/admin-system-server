@@ -293,3 +293,18 @@ exports.listMemberFormat = (req, res) =>{
         res.send({code: 0, data:{list: resList}})
     })
 }
+
+exports.listAllEmailFormate = (req, res) =>{
+    //查询member列表的sql
+    const searchAllEmailList = "SELECT GROUP_CONCAT(DISTINCT emailFormate SEPARATOR \'\') as results FROM member  WHERE memberType IN ('R', 'LM', 'AM', 'P');";
+
+    //查询总列表
+    db.query(searchAllEmailList, (err, resList) =>{
+        if (err) {
+            return res.send({code: 1, message: err.message});
+        }
+
+        //print results
+        res.send({code: 0, data:{list: resList}})
+    })
+}

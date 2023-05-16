@@ -23,5 +23,7 @@ router.get('/close', memberController.closeRallyStatusByID);
 router.get('/open', memberController.openRallyStatusByID);
 //member 查询对应membership的Email Formate 
 router.get('/listFormate', memberController.listMemberFormat);
+//member 查询对应membership的Email Formate 
+router.get('/listAllEmailFormate', memberController.listAllEmailFormate);
 
 module.exports  = router;
