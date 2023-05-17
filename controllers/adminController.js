@@ -153,7 +153,7 @@ exports.createRallyControllers = async(req, res) =>{
         const imageUrl = ossResult.url;
 
         //当创建一个rally时，使用 DEFAULT 关键字来设置status这个列的默认值
-        const setUpStatusSql = 'ALTER TABLE rally MODIFY status VARCHAR(50) DEFAULT "open"';
+        const setUpStatusSql = 'ALTER TABLE rally MODIFY status VARCHAR(50) DEFAULT "Upcoming"';
         db.query(setUpStatusSql, (err, results) =>{
             if (err) {
                 return res.send({code: 1, message:err.message})

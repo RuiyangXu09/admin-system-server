@@ -244,7 +244,7 @@ exports.closeRallyStatusByID =(req, res) =>{
     let {id, status} = req.query;
 
     //sql语句，将rally表中每个对应id值的status列名的open设置为close
-    const setupStatusSql = 'UPDATE rally SET status = "close" WHERE id =?';
+    const setupStatusSql = 'UPDATE rally SET status = "Past" WHERE id =?';
     //执行语句，传入sql语句和参数
     db.query(setupStatusSql, [id, status], (err, results) =>{
         if (err) {
@@ -261,7 +261,7 @@ exports.openRallyStatusByID =(req, res) =>{
     let {id, status} = req.query;
 
     //sql语句，将rally表中每个对应id值的status列名的open设置为close
-    const setupStatusSql = 'UPDATE rally SET status = "open" WHERE id =?';
+    const setupStatusSql = 'UPDATE rally SET status = "Upcoming" WHERE id =?';
     //执行语句，传入sql语句和参数
     db.query(setupStatusSql, [id, status], (err, results) =>{
         if (err) {
