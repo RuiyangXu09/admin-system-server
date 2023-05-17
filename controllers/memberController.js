@@ -192,13 +192,13 @@ exports.listRally = (req, res) =>{
 //修改rally info
 exports.updateRallyInfoByID = (req, res) =>{
     //定义rally中需要修改的参数
-    let {id, mainTitle, subTitle, content, time, address} = req.query;
+    let {id, mainTitle, subTitle, content, time, address, bulletin, album} = req.query;
     let sql = 'UPDATE rally SET ';
     let arr = [];
 
-    if (mainTitle && subTitle && content && time && address) {
-        sql = sql + 'mainTitle=?, subTitle=?, content=?, time=?, address=? WHERE id=?';
-        arr = [mainTitle, subTitle, content, time, address, Number(id)];
+    if (mainTitle && subTitle && content && time && address && bulletin && album) {
+        sql = sql + 'mainTitle=?, subTitle=?, content=?, time=?, address=?, bulletin=?, album=? WHERE id=?';
+        arr = [mainTitle, subTitle, content, time, address, bulletin, album, Number(id)];
     } else if (mainTitle) {
         sql = sql + 'mainTitle=? WHERE id=?';
         arr = [mainTitle, Number(id)];
@@ -214,6 +214,12 @@ exports.updateRallyInfoByID = (req, res) =>{
     } else if (address) {
         sql = sql + 'address=? WHERE id=?';
         arr = [address, Number(id)];
+    } else if (bulletin) {
+        sql = sql + 'bulletin=? WHERE id=?';
+        arr = [bulletin, Number(id)];
+    }else if (album) {
+        sql = sql + 'album=? WHERE id=?';
+        arr = [album, Number(id)];
     }
 
     //执行sql语句
