@@ -192,36 +192,26 @@ exports.listRally = (req, res) =>{
 //修改rally info
 exports.updateRallyInfoByID = (req, res) =>{
     //定义rally中需要修改的参数
-    let {id, mainTitle, subTitle, content, time, address, bulletin, album} = req.query;
+    let {id, mainTitle, subTitle, content, time, address, bulletin, album, mapUrl} = req.query;
+
+    // Store the fields and their values in an object
+    let fieldsToUpdate = {mainTitle, subTitle, content, time, address, bulletin, album, mapUrl};
+    
     let sql = 'UPDATE rally SET ';
     let arr = [];
-
-    if (mainTitle && subTitle && content && time && address && bulletin && album) {
-        sql = sql + 'mainTitle=?, subTitle=?, content=?, time=?, address=?, bulletin=?, album=? WHERE id=?';
-        arr = [mainTitle, subTitle, content, time, address, bulletin, album, Number(id)];
-    } else if (mainTitle) {
-        sql = sql + 'mainTitle=? WHERE id=?';
-        arr = [mainTitle, Number(id)];
-    } else if (subTitle) {
-        sql = sql + 'subTitle=? WHERE id=?';
-        arr = [subTitle, Number(id)];
-    } else if (content) {
-        sql = sql + 'content=? WHERE id=?';
-        arr = [content, Number(id)];
-    } else if (time) {
-        sql = sql + 'time=? WHERE id=?';
-        arr = [time, Number(id)];
-    } else if (address) {
-        sql = sql + 'address=? WHERE id=?';
-        arr = [address, Number(id)];
-    } else if (bulletin) {
-        sql = sql + 'bulletin=? WHERE id=?';
-        arr = [bulletin, Number(id)];
-    }else if (album) {
-        sql = sql + 'album=? WHERE id=?';
-        arr = [album, Number(id)];
+    
+    // Loop through each field. If it exists, add it to the SQL query and values array
+    for (let field in fieldsToUpdate) {
+        if (fieldsToUpdate[field] !== undefined) {
+            sql += `${field}=?, `;
+            arr.push(fieldsToUpdate[field]);
+        }
     }
 
+    // Remove the last comma and space from the SQL query, and add the WHERE clause
+    sql = sql.slice(0, -2) + ' WHERE id = ?';
+    arr.push(Number(id));
+    
     //执行sql语句
     db.query(sql, arr, (err, results) =>{
         if (err) {
@@ -300,6 +290,7 @@ exports.listMemberFormat = (req, res) =>{
     })
 }
 
+//search all emailFormat
 exports.listAllEmailFormate = (req, res) =>{
     //查询member列表的sql
     const searchAllEmailList = "SELECT GROUP_CONCAT(DISTINCT emailFormate SEPARATOR \'\') as results FROM member  WHERE memberType IN ('R', 'LM', 'AM', 'P');";
