@@ -161,7 +161,7 @@ exports.editAdminInfo = (req, res) =>{
         sql = sql + 'admin=? WHERE id=?';
         arr = [admin, Number(id)];
     }else if (password) {
-        sql = sql + 'password WHERE id=?';
+        sql = sql + 'password=? WHERE id=?';
         arr = [password, Number(id)];
     }
 
