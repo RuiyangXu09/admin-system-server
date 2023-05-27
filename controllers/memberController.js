@@ -273,7 +273,7 @@ exports.listMemberFormat = (req, res) =>{
     //定义需要传入的变量值
     let {memberType, active, id} = req.query;
     //查询member列表的sql
-    const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member WHERE memberType =? AND active =?';
+    const searchMemberEmailFormatSql = 'SELECT DISTINCT emailFormate FROM member WHERE memberType =? AND active =?';
     // const searchMemberEmailFormatSql = 'SELECT GROUP_CONCAT(DISTINCT `emailFormate` SEPARATOR \'\') as results FROM member';
 
     //条件语句 WHERE memberType = \'R\'
@@ -284,24 +284,35 @@ exports.listMemberFormat = (req, res) =>{
         if (err) {
             return res.send({code: 1, message: err.message});
         }
+        // Combine the results into a single string
+        let emailFormateString = "";
+        for(let i = 0; i < resList.length; i++){
+            emailFormateString += resList[i].emailFormate;
+        }
 
         //print results
-        res.send({code: 0, data:{list: resList}})
+        res.send({code: 0, data:{list: emailFormateString}})
     })
 }
 
 //search all emailFormat
-exports.listAllEmailFormate = (req, res) =>{
-    //查询member列表的sql
-    const searchAllEmailList = "SELECT GROUP_CONCAT(DISTINCT emailFormate SEPARATOR \'\') as results FROM member  WHERE memberType IN ('R', 'LM', 'AM', 'P');";
+exports.listAllEmailFormate = (req, res) => {
+    // Change the SQL query to select distinct emailFormate
+    const searchAllEmailList = "SELECT DISTINCT emailFormate FROM member WHERE memberType IN ('R', 'LM', 'AM', 'P');";
 
-    //查询总列表
-    db.query(searchAllEmailList, (err, resList) =>{
+    // Perform the query
+    db.query(searchAllEmailList, (err, resList) => {
         if (err) {
-            return res.send({code: 1, message: err.message});
+            return res.send({ code: 1, message: err.message });
         }
 
-        //print results
-        res.send({code: 0, data:{list: resList}})
+        // Combine the results into a single string
+        let emailFormateString = "";
+        for(let i = 0; i < resList.length; i++){
+            emailFormateString += resList[i].emailFormate;
+        }
+
+        // Send the combined results
+        res.send({ code: 0, data: { list: emailFormateString } });
     })
 }
