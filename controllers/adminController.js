@@ -173,6 +173,7 @@ exports.createRallyControllers = async(req, res) =>{
     }
 }
 
+//rally page: update Cover Image的接口
 exports.uploadBulletinByIDControllers = async(req, res) =>{
     //传入前端的id值
     let {id} = req.body;
@@ -185,13 +186,13 @@ exports.uploadBulletinByIDControllers = async(req, res) =>{
         const fileUrl = ossResult.url;
 
         //sql语句，将HTTPS格式的file URL存储到mysql数据库中
-        const uploadSql = 'UPDATE rally SET bulletin=? WHERE id=?';
+        const uploadSql = 'UPDATE rally SET image=? WHERE id=?';
         db.query(uploadSql, [fileUrl, id], (err, results) =>{
             if (err) {
                 return res.send({code: 1, message: err.message});
             }
 
-            res.send({code: 0, message:'Upload Bulletin Success!'});
+            res.send({code: 0, message:'Update Cover Image Success!'});
         })
     } catch (err) {
         console.error(err);

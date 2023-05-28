@@ -192,10 +192,10 @@ exports.listRally = (req, res) =>{
 //修改rally info
 exports.updateRallyInfoByID = (req, res) =>{
     //定义rally中需要修改的参数
-    let {id, mainTitle, subTitle, content, time, address, bulletin, album, mapUrl} = req.query;
+    let {id, mainTitle, subTitle, content, time, address, bulletin, album, mapUrl, rallyID} = req.query;
 
     // Store the fields and their values in an object
-    let fieldsToUpdate = {mainTitle, subTitle, content, time, address, bulletin, album, mapUrl};
+    let fieldsToUpdate = {mainTitle, subTitle, content, time, address, bulletin, album, mapUrl, rallyID};
     
     let sql = 'UPDATE rally SET ';
     let arr = [];
